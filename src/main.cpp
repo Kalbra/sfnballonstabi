@@ -3,24 +3,24 @@
 #include <Servo.h>
 #include <Wire.h>
 
-#define MPU6050_ADRESS 0x68
-#define ADDR  0x0d
+#define MPU6050_ADRESS     0x68
+#define ADDR               0x0d
 
-#define Mode_Standby    0b00000000
-#define Mode_Continuous 0b00000001
+#define Mode_Standby       0b00000000
+#define Mode_Continuous    0b00000001
 //Output data rate
-#define ODR_10Hz        0b00000000
-#define ODR_50Hz        0b00000100
-#define ODR_100Hz       0b00001000
-#define ODR_200Hz       0b00001100
+#define ODR_10Hz           0b00000000
+#define ODR_50Hz           0b00000100
+#define ODR_100Hz          0b00001000
+#define ODR_200Hz          0b00001100
 //Measure range
-#define RNG_2G          0b00000000
-#define RNG_8G          0b00010000
+#define RNG_2G             0b00000000
+#define RNG_8G             0b00010000
 //Over sampling rate
-#define OSR_512         0b00000000
-#define OSR_256         0b01000000
-#define OSR_128         0b10000000
-#define OSR_64          0b11000000
+#define OSR_512            0b00000000
+#define OSR_256            0b01000000
+#define OSR_128            0b10000000
+#define OSR_64             0b11000000
 
 /************************Variables***********************/
 const int ACCEL_OFFSET   = 200;
@@ -29,8 +29,8 @@ const int GYRO_SENSITITY = 131;  // 131 is sensivity of gyro from data sheet
 const float GYRO_SCALE   = 0.2; //  0.02 by default - tweak as required
 const float LOOP_TIME    = 0.15; // 0.1 = 100ms
 
-int valuebig = 110;
-int valuesmall = 70;   //sdfds
+int valuebig             = 110;
+int valuesmall           = 70;   
 
 int accValue[3], accAngle[3], gyroValue[3], temperature, accCorr;
 float gyroAngle[3], gyroCorr;
