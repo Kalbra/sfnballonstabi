@@ -194,21 +194,25 @@ logging("Start loop");
     gyroValue[i] = Wire.read()<<8 | Wire.read(); // reading registers: GYRO_XOUT, GYRO_>OUT, GYRO_ZOUT
   }
 
-  Serial.print("Angle: ");
+ // Serial.print("Angle: ");
+ logging("Angle: ");
   for(byte i=0; i<3; i++) {
     accCorr = accValue[i] - ACCEL_OFFSET;
     accCorr = map(accCorr, -16800, 16800, -90, 90);
     accAngle[i] = constrain(accCorr, -90, 90);
-    Serial.print(accAngle[i]);
-    Serial.print("\t");
+   /* Serial.print(accAngle[i]);
+    Serial.print("\t"); */
+    logging(String(accAngle[i]));
   }
-  Serial.print("| Gyro: \t");
+ // Serial.print("| Gyro: \t");
 
   for(byte i=0; i<3; i++) {
     gyroCorr = (float)((gyroValue[i]/GYRO_SENSITITY) - GYRO_OFFSET);
     gyroAngle[i] = (gyroCorr * GYRO_SCALE) * -LOOP_TIME;
-    Serial.print(gyroAngle[i]);
-    Serial.print("\t");
+  /*  Serial.print(gyroAngle[i]);
+    Serial.print("\t");  */
+    logging(String(gyroAngle[i]));
+
   }
 
   Serial.println(" ");
