@@ -32,16 +32,20 @@ const float LOOP_TIME    = 0.15; // 0.1 = 100ms
 int valuebig             = 110;
 int valuesmall           = 70;   
 
+int servo1grund          = -7;
+int servo2grund          = -11;
+int servo3grund          = -5;
+int servo4grund          = 0;
+
+int highshigh            = 0;
+bool action              = false;
+
 int accValue[3], accAngle[3], gyroValue[3], temperature, accCorr;
 float gyroAngle[3], gyroCorr;
 
-int servo1grund = -7;
-int servo2grund = -11;
-int servo3grund = -5;
-int servo4grund = 0;
-
-int highshigh = 0;
-bool action = false;
+float azimut;
+int x,y,z;
+int azi;
 
 Servo servo1;
 Servo servo2;
@@ -67,7 +71,7 @@ void setCtrlRegister(uint8_t overSampling, uint8_t range, uint8_t dataRate, uint
   writeRegister(9,overSampling | range | dataRate | mode);
 }
 
-void readData(uint16_t * x, uint16_t * y, uint16_t * z) {
+void readData(int * x, int * y, int * z) {
   Wire.beginTransmission(ADDR);
   Wire.write(0x00);
   Wire.endTransmission();
@@ -171,12 +175,11 @@ logging("Setup");
 void loop() {
 logging("Start loop");
   Serial.print(bmp.readTemperature());
-  int x,y,z; //triple axis data
-  float azimut;
-  int azi; //azimut only positiv as integer
+ //triple axis data
+  
+  azi = azimut+180; //azimut only positiv as integer
   readData(&x, &y, &z);
   azimut = -atan2(y,x) * 180.0/PI;
-  azi = azimut+180;
   Wire.beginTransmission(MPU6050_ADRESS);
   Wire.write(0x3B); // starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
   Wire.endTransmission(false); // the parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
