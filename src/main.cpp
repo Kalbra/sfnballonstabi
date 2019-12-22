@@ -22,7 +22,7 @@
 #define OSR_128         0b10000000
 #define OSR_64          0b11000000
 
-
+/************************Variables***********************/
 const int ACCEL_OFFSET   = 200;
 const int GYRO_OFFSET    = 151;  // 151
 const int GYRO_SENSITITY = 131;  // 131 is sensivity of gyro from data sheet
@@ -30,7 +30,7 @@ const float GYRO_SCALE   = 0.2; //  0.02 by default - tweak as required
 const float LOOP_TIME    = 0.15; // 0.1 = 100ms
 
 int valuebig = 110;
-int valuesmall = 70;
+int valuesmall = 70;   //sdfds
 
 int accValue[3], accAngle[3], gyroValue[3], temperature, accCorr;
 float gyroAngle[3], gyroCorr;
@@ -40,13 +40,17 @@ int servo2grund = -11;
 int servo3grund = -5;
 int servo4grund = 0;
 
+int highshigh = 0;
+bool action = false;
+
 Servo servo1;
 Servo servo2;
 Servo servo3;
 Servo servo4;
 
 Adafruit_BMP085 bmp;
-
+/********************************************************/
+/**************************libfunctions******************/
 void writeRegister(uint8_t reg, uint8_t val){
   Wire.beginTransmission(ADDR); //start talking
   Wire.write(reg); 
@@ -62,6 +66,7 @@ void softReset() {
 void setCtrlRegister(uint8_t overSampling, uint8_t range, uint8_t dataRate, uint8_t mode) {
   writeRegister(9,overSampling | range | dataRate | mode);
 }
+
 void readData(uint16_t * x, uint16_t * y, uint16_t * z) {
   Wire.beginTransmission(ADDR);
   Wire.write(0x00);
@@ -74,67 +79,98 @@ void readData(uint16_t * x, uint16_t * y, uint16_t * z) {
   *z = Wire.read(); //LSB y
   *z |= Wire.read() << 8; //MSB y  
 }
-
-
+/********************************************************/
+/************************servobefehl*********************/
 void left(){
   servo1.write(valuesmall + servo1grund);
   servo3.write(valuebig + servo3grund); 
   }
+  
 void right(){
   servo1.write(valuebig + servo1grund);
   servo3.write(valuesmall + servo3grund);
-  
   }
+
 void front(){
   servo2.write(valuesmall + servo2grund);
   servo4.write(valuebig + servo4grund);
   }
+
 void back(){
   servo2.write(valuebig + servo2grund);
   servo4.write(valuesmall + servo4grund);
-  
   }
+
 void rotateleft() {
   servo1.write(valuebig + servo1grund);
   servo2.write(valuebig + servo2grund);
   servo3.write(valuebig + servo3grund);
   servo4.write(valuebig + servo4grund);
   }
+
 void rotateright() {
   servo1.write(valuesmall + servo1grund);
   servo2.write(valuesmall + servo2grund);
   servo3.write(valuesmall + servo3grund);
   servo4.write(valuesmall + servo4grund);
   }
+
 void reset(){
   servo1.write(90 + servo1grund);
   servo2.write(90 + servo2grund);
   servo3.write(90 + servo3grund);
   servo4.write(90 + servo4grund);
   }
+/********************************************************/
+/***************************logger***********************/
+void logging(String logstr){
+  Serial.println(logstr);
+}
+/********************************************************/
 
+void lookfooparation(int high){
+  if(highshigh > high){
+    action = true;
+    logging("Starting Stable");
+  }
+  else
+  {
+    highshigh = high;
+    action = false;
+  }
+}
 
 void setup() {
+  //Begin Serial Commonication
+  Serial.begin(9600);
+  Serial.flush();
+  /***********************************************/
+logging("Setup");
+  //Servo define
   servo1.attach(11);
   servo2.attach(8);
   servo3.attach(5);
   servo4.attach(2);
+  /***********************************************/
 
-
+  //Wire comminication start
   Wire.begin();
-  
   softReset();
   setCtrlRegister(OSR_128,RNG_2G,ODR_100Hz,Mode_Continuous);
-  Wire.beginTransmission(MPU6050_ADRESS); // Begins a transmission to the I2C slave (GY-521 board)
-  Wire.write(0x6B); // PWR_MGMT_1 register
-  Wire.write(0); // set to zero (wakes up the MPU-6050)
+  Wire.beginTransmission(MPU6050_ADRESS); 
+  Wire.write(0x6B);
+  Wire.write(0);
   Wire.endTransmission(true);
+  /***********************************************/
 
-  Serial.begin(9600);
-  Serial.flush();
+  //Define Pressure Sensor
+  bmp.begin();
+  /***********************************************/
 }
 
 void loop() {
+logging("Start loop");
+  Serial.print(bmp.readTemperature());
   int x,y,z; //triple axis data
   float azimut;
   int azi; //azimut only positiv as integer
@@ -180,6 +216,7 @@ void loop() {
   ///////////////////////looking/////////////////////////
 
 
+if(action){
 
 if (azimut > 20){
   rotateright();
@@ -187,7 +224,6 @@ if (azimut > 20){
 else if (azimut < -20){
   rotateleft();
   }
-
 else {
   reset();
 
@@ -206,5 +242,6 @@ else if (accAngle[0] < -7){
 else{
   reset();
   }
+}
 }
 }
