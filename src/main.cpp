@@ -23,34 +23,33 @@ Servo tester;
 
 
 void setup() {
-  tester.attach(2);
+  tester.attach(2);                //Define servo port 
 
-  Serial.begin(9600);
+  Serial.begin(9600);              //Begin serial connection at 9600 Baud
 
-  Wire.begin();
-  mpu6050.begin();
-  mpu6050.calcGyroOffsets(true);
+  Wire.begin();                    //Begin I2C bus
 
-  //Turn the PID on
-  myPID.SetMode(AUTOMATIC);
-  //Adjust PID values
-  myPID.SetTunings(Kp, Ki, Kd);
+  mpu6050.begin();                 //Begin MPU6050 reading 
+
+  mpu6050.calcGyroOffsets(true);   //Config MPU6050
+
+  myPID.SetMode(AUTOMATIC);        //Turn the PID on
+
+  myPID.SetTunings(Kp, Ki, Kd);    //Adjust PID values
 
 }
 
 void loop() {
-  //Update ther MPU6050
-  mpu6050.update();
+
+  mpu6050.update();               //Update ther MPU6050
   
-  //Made all ready for the servo
-  Input = mpu6050.getAccAngleX();
+  //Make all ready for the servo
+  Input = mpu6050.getAccAngleX(); 
   Outputreadyforservo = map(Output, 0, 255, 0, 35);
 
-  //write to servo
-  tester.write(Outputreadyforservo+ 90);
+  tester.write(Outputreadyforservo+ 90);  //write var to servo
 
-  //Compute the PID
-  myPID.Compute();
+  myPID.Compute();  //Compute the PID
   
 
   //Print the infos to serial
