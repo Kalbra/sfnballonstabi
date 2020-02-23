@@ -17,8 +17,8 @@ double Kp=100, Ki=100, Kd=0;       //PID Values
 
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT); //Define PID
 
-
 MPU6050 mpu6050(Wire);             //Define MPU6050
+
 Servo tester;                      //Define Servos 
 
 
