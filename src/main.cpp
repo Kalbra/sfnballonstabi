@@ -1,21 +1,21 @@
-#include <Arduino.h>  //Arduino Framework for basic commands
-#include <PID_v1.h>   //PID libarry 
-#include <Wire.h>     //I2C Bus libarry
-#include <Servo.h>    //Servo libarry(PWM Signal)
+#include <Arduino.h>              //Arduino Framework for basic commands
+#include <PID_v1.h>               //PID libarry 
+#include <Wire.h>                 //I2C Bus libarry
+#include <Servo.h>                //Servo libarry(PWM Signal)
 #include "/home/kalle/Documents/PlatformIO/Projects/pidgonelsteuerung/lib/MPU6050_tockn.h"  //Libarry MPU6050 reading via I2C(Wire)
 
-#define MPU6050_ADRESS     0x68   //Adress for MPPU6050
+#define MPU6050_ADRESS     0x68    //Adress for MPPU6050
        
 
-double Setpoint = 0;  //Point for PID
-double Input    = 0;  //Value from MPU6050 for PID
-double Output   = 0;  //Output for Servo from PID
+double Setpoint = 0;               //Point for PID
+double Input    = 0;               //Value from MPU6050 for PID
+double Output   = 0;               //Output for Servo from PID
 
-double Outputreadyforservo;        //Value 
+double Outputreadyforservo;        //Value mapped after PID calculation
 
 double Kp=100, Ki=100, Kd=0;       //PID Values 
 
-PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT); //Define PID
 
 
 MPU6050 mpu6050(Wire);             //Define MPU6050
@@ -52,7 +52,6 @@ void loop() {
 
   myPID.Compute();  //Compute the PID
   
-
   //Print the infos to serial
   Serial.print("Input: ");
   Serial.println(Input);
