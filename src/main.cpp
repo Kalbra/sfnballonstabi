@@ -2,7 +2,7 @@
 #include <PID_v1.h>
 #include <Wire.h>
 #include <Servo.h>
-#include "MPU6050_tockn.h"
+#include "/home/kalle/Documents/PlatformIO/Projects/pidgonelsteuerung/lib/MPU6050_tockn.h"
 
 #define MPU6050_ADRESS     0x68
 
