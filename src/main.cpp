@@ -1,16 +1,8 @@
-<<<<<<< Updated upstream
 #include <Arduino.h>              //Arduino Framework for basic commands
 #include <PID_v1.h>               //PID libarry 
 #include <Wire.h>                 //I2C Bus libarry
 #include <Servo.h>                //Servo libarry(PWM Signal)
-#include "MPU6050_tockn.h"  //Libarry MPU6050 reading via I2C(Wire)
-=======
-#include <Arduino.h>
-#include <PID_v1.h>
-#include <Wire.h>
-#include <Servo.h>
-#include "MPU6050_tockn.h"
->>>>>>> Stashed changes
+#include "MPU6050_tockn.h"        //Libarry MPU6050 reading via I2C(Wire)
 
 #define MPU6050_ADRESS     0x68    //Adress for MPPU6050
        
@@ -58,7 +50,7 @@ void loop() {
 
   tester.write(Outputreadyforservo+ 90);  //write var to servo
 
-  myPID.Compute();  //Compute the PID
+  myPID.Compute();                //Compute the PID
   
   //Print the infos to serial
   Serial.print("Input: ");
