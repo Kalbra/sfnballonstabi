@@ -11,18 +11,19 @@ double Setpoint = 0;  //Point for PID
 double Input    = 0;  //Value from MPU6050 for PID
 double Output   = 0;  //Output for Servo from PID
 
-double Outputreadyforservo;
+double Outputreadyforservo;        //Value 
 
-double Kp=100, Ki=100, Kd=0; 
+double Kp=100, Ki=100, Kd=0;       //PID Values 
 
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
-MPU6050 mpu6050(Wire);
 
-Servo tester;
+MPU6050 mpu6050(Wire);             //Define MPU6050
+Servo tester;                      //Define Servos 
 
 
 void setup() {
+  
   tester.attach(2);                //Define servo port 
 
   Serial.begin(9600);              //Begin serial connection at 9600 Baud
