@@ -3,6 +3,7 @@
 #include <Wire.h>                 //I2C Bus libarry
 #include <Servo.h>                //Servo libarry(PWM Signal)
 #include "MPU6050_tockn.h"        //Libarry MPU6050 reading via I2C(Wire)
+#include "HMC5883L.h"
 
 #define MPU6050_ADRESS     0x68    //Adress for MPPU6050
 
