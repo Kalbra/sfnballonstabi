@@ -8,24 +8,40 @@
 
 bool minusInput;       
 
-double Setpoint = 0;               //Point for PID
-double Input    = 0;               //Value from MPU6050 for PID
-double Output   = 0;               //Output for Servo from PID
+double Setpointx = 0;               //Point for PID
+double Inputx    = 0;               //Value from MPU6050 for PID
+double Outputx   = 0;               //Output for Servo from PID
 
-double Outputreadyforservo;        //Value mapped after PID calculation
+double Setpointy = 0;               //Point for PID
+double Inputy    = 0;               //Value from MPU6050 for PID
+double Outputy   = 0;               //Output for Servo from PID
 
-double Kp=100, Ki=100, Kd=0;       //PID Values 
+double Outputreadyforservox;        //Value mapped after PID calculation
+double Outputreadyforservoy;        //Value mapped after PID calculation
 
-PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT); //Define PID
+double Kpx=100, Kix=100, Kdx=0;    //PID Values 
+double Kpy=100, Kiy=100, Kdy=0;    //PID Values 
+
+PID PIDx(&Inputx, &Outputx, &Setpointx, Kpx, Kix, Kdx, DIRECT); //Define PID
+PID PIDy(&Inputy, &Outputy, &Setpointy, Kpy, Kiy, Kdy, DIRECT);
 
 MPU6050 mpu6050(Wire);             //Define MPU6050
 
 Servo tester;                      //Define Servos 
 
+Servo servo1;
+Servo servo2;
+Servo servo3;
+Servo servo4;
 
 void setup() {
   
-  tester.attach(2);                //Define servo port 
+  tester.attach(3);                //Define servo port 
+
+  servo1.attach(11);
+  servo2.attach(8);
+  servo3.attach(5);
+  servo4.attach(2);
 
   Serial.begin(9600);              //Begin serial connection at 9600 Baud
 
@@ -35,10 +51,11 @@ void setup() {
 
   mpu6050.calcGyroOffsets(true);   //Config MPU6050
 
-  myPID.SetMode(AUTOMATIC);        //Turn the PID on
+  PIDx.SetMode(AUTOMATIC);        //Turn the PID on
+  PIDy.SetMode(AUTOMATIC); 
 
-  myPID.SetTunings(Kp, Ki, Kd);    //Adjust PID values
-
+  PIDx.SetTunings(Kpx, Kix, Kdx);    //Adjust PID values
+  PIDy.SetTunings(Kpy, Kiy, Kdy);
 }
 
 void loop() {
@@ -46,8 +63,10 @@ void loop() {
   mpu6050.update();               //Update ther MPU6050
   
   //Make all ready for the servo
-  Input = mpu6050.getAccAngleX(); 
+  Inputx = mpu6050.getAccAngleX(); 
+  Inputy  = mpu6050.getAccAngleY();
 
+  /*
   if(Input > 0){
     Input = -(Input);
     minusInput = false;
@@ -55,26 +74,31 @@ void loop() {
   else{
     minusInput = true; 
   }
-  
-  myPID.Compute();                //Compute the PID 
+  */
 
-  Outputreadyforservo = map(Output, 0, 255, 0, 35);
+
+  PIDx.Compute();                //Compute the PID 
+  PIDy.Compute();
+
+  Outputreadyforservox = map(Outputx, 0, 255, 0, 35);
+  Outputreadyforservoy = map(Outputy, 0, 255, 0, 35);
   
+  /*
   if(!minusInput){
     Outputreadyforservo = -(Outputreadyforservo);
-  }
+  }*/
 
-  tester.write(Outputreadyforservo + 90);  //write var to servo
+  tester.write(Outputreadyforservox + 90);  //write var to servo
 
        
   
   //Print the infos to serial
   Serial.print("Input: ");
-  Serial.println(Input);
+  Serial.println(Inputx , Inputy);
   Serial.print("Output: ");
-  Serial.println(Outputreadyforservo);
+  Serial.println(Outputreadyforservox , Outputreadyforservoy);
   Serial.print("Setpoint: ");  
-  Serial.println(Setpoint);
+  Serial.println(Setpointx , Setpointy);
   Serial.println("=============================");
   delay(1000);
 
