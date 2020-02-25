@@ -5,7 +5,8 @@
 #include "MPU6050_tockn.h"        //Libarry MPU6050 reading via I2C(Wire)
 
 #define MPU6050_ADRESS     0x68    //Adress for MPPU6050
-       
+
+bool minusInput;       
 
 double Setpoint = 0;               //Point for PID
 double Input    = 0;               //Value from MPU6050 for PID
@@ -47,21 +48,25 @@ void loop() {
   //Make all ready for the servo
   Input = mpu6050.getAccAngleX(); 
 
-  myPID.Compute();                //Compute the PID
-
   if(Input > 0){
-    double minuout = -(Output);
-    Serial.println(minuout);
-    Outputreadyforservo = (map(minuout, 0, 255, 0, 35));
+    Input = -(Input);
+    minusInput = false;
   }
   else{
-    Outputreadyforservo = -(map((Output), 0, 255, 0, 35));
+    minusInput = true; 
   }
-  //Outputreadyforservo = map(Output, 0, 255, 0, 35);
+  
+  myPID.Compute();                //Compute the PID 
+
+  Outputreadyforservo = map(Output, 0, 255, 0, 35);
+  
+  if(!minusInput){
+    Outputreadyforservo = -(Outputreadyforservo);
+  }
 
   tester.write(Outputreadyforservo + 90);  //write var to servo
 
-                
+       
   
   //Print the infos to serial
   Serial.print("Input: ");
