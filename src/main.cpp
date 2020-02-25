@@ -93,13 +93,21 @@ void loop() {
        
   
   //Print the infos to serial
-  Serial.print("Input: ");
-  Serial.println(Inputx , Inputy);
-  Serial.print("Output: ");
-  Serial.println(Outputreadyforservox , Outputreadyforservoy);
-  Serial.print("Setpoint: ");  
-  Serial.println(Setpointx , Setpointy);
-  Serial.println("=============================");
+  Serial.print("Inputx: ");
+  Serial.print(Inputx);
+  Serial.print("  Inputy: ");
+  Serial.println(Inputy);
+
+  Serial.print("Outputx: ");
+  Serial.print(Outputreadyforservox);
+  Serial.print("  Outputy: ");
+  Serial.println(Outputreadyforservoy);
+
+  Serial.print("Setpointx: ");  
+  Serial.print(Setpointx);
+  Serial.print("  Setpointy: ");  
+  Serial.println(Setpointy);
+  Serial.println("========================================");
   delay(1000);
 
 }
