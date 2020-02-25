@@ -46,11 +46,22 @@ void loop() {
   
   //Make all ready for the servo
   Input = mpu6050.getAccAngleX(); 
-  Outputreadyforservo = map(Output, 0, 255, 0, 35);
-
-  tester.write(Outputreadyforservo+ 90);  //write var to servo
 
   myPID.Compute();                //Compute the PID
+
+  if(Input > 0){
+    double minuout = -(Output);
+    Serial.println(minuout);
+    Outputreadyforservo = (map(minuout, 0, 255, 0, 35));
+  }
+  else{
+    Outputreadyforservo = -(map((Output), 0, 255, 0, 35));
+  }
+  //Outputreadyforservo = map(Output, 0, 255, 0, 35);
+
+  tester.write(Outputreadyforservo + 90);  //write var to servo
+
+                
   
   //Print the infos to serial
   Serial.print("Input: ");
