@@ -3,9 +3,11 @@
 #include <Wire.h>                 //I2C Bus libarry
 #include <Servo.h>                //Servo libarry(PWM Signal)
 #include "MPU6050_tockn.h"        //Libarry MPU6050 reading via I2C(Wire)
-#include "HMC5883L.h"
+#include <QMC5883L.h>
 
 #define MPU6050_ADRESS     0x68    //Adress for MPPU6050
+
+int compassdirection;
 
 bool minusInput;       
 
@@ -28,6 +30,8 @@ PID PIDy(&Inputy, &Outputy, &Setpointy, Kpy, Kiy, Kdy, DIRECT);
 
 MPU6050 mpu6050(Wire);             //Define MPU6050
 
+QMC5883L compass;
+
 Servo tester;                      //Define Servos 
 
 Servo servo1;
@@ -49,8 +53,10 @@ void setup() {
   Wire.begin();                    //Begin I2C bus
 
   mpu6050.begin();                 //Begin MPU6050 reading 
-
   mpu6050.calcGyroOffsets(true);   //Config MPU6050
+
+  compass.init();
+	compass.setSamplingRate(0);
 
   PIDx.SetMode(AUTOMATIC);        //Turn the PID on
   PIDy.SetMode(AUTOMATIC); 
@@ -66,6 +72,8 @@ void loop() {
   //Make all ready for the servo
   Inputx = mpu6050.getAccAngleX(); 
   Inputy  = mpu6050.getAccAngleY();
+
+  compassdirection = compass.readHeading();
 
   /*
   if(Input > 0){
@@ -108,6 +116,9 @@ void loop() {
   Serial.print(Setpointx);
   Serial.print("  Setpointy: ");  
   Serial.println(Setpointy);
+  
+  Serial.print("Compass: ");
+  Serial.println(compassdirection);
   Serial.println("========================================");
   delay(1000);
 
