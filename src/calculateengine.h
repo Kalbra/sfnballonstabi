@@ -1,7 +1,10 @@
 #ifndef CALCULATE_H
 #define CALCULATE_H
 
-struct pidvar{
+
+
+class pidvar{
+public:
     int value;
     bool direction;
 };

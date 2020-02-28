@@ -13,8 +13,8 @@ void calculate::run(int *servo1, int *servo2, int *servo3, int *servo4, pidvar x
         *servo3 = -(xpid.value) + servo1offset3;
     }
     else{
-        *servo3 = -(xpid.value) + servo1offset3;
-        *servo1 =   xpid.value  + servo1offset1;
+        *servo3 =   xpid.value  + servo1offset3;
+        *servo1 = -(xpid.value)  + servo1offset1;
     }
 
     if(ypid.direction){
@@ -22,7 +22,7 @@ void calculate::run(int *servo1, int *servo2, int *servo3, int *servo4, pidvar x
         *servo4 = -(ypid.value) + servo1offset4;
     }
     else{
-        *servo4 = -(ypid.value) + servo1offset4;
-        *servo2 =   ypid.value  + servo1offset2;
+        *servo4 =   ypid.value  + servo1offset4;
+        *servo2 = -(ypid.value) + servo1offset2;
     }
 }
