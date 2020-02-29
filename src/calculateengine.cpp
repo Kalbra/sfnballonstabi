@@ -1,3 +1,4 @@
+#include "Arduino.h"
 #include "calculateengine.h"
 
 void calculate::offset(int fromservo1, int fromservo2, int fromservo3, int fromservo4){
@@ -38,9 +39,34 @@ void calculate::run(int *servo1, int *servo2, int *servo3, int *servo4, pidvar x
         servo3com =  pidcomass.value;
         servo4com = -(pidcomass.value);
     }
-    
+
     *servo1 = servo1mpu + servo1com / 2;
     *servo2 = servo2mpu + servo2com / 2;
     *servo3 = servo3mpu + servo3com / 2;
     *servo4 = servo4mpu + servo4com / 2;
+}
+
+void calculate::debug(){
+    Serial.println("__________________________________________");
+    Serial.println("Device | Servo1 | Servo2 | Servo3 | Servo4");
+
+    Serial.print("MPU | ");
+    Serial.print(servo1mpu);
+    Serial.print(" | ");
+    Serial.print(servo2mpu);
+    Serial.print(" | ");
+    Serial.print(servo3mpu);
+    Serial.print(" | ");
+    Serial.print(servo4mpu);
+    Serial.println(" |");
+
+    Serial.print("COMPASS | ");
+    Serial.print(servo1com);
+    Serial.print(" | ");
+    Serial.print(servo2com);
+    Serial.print(" | ");
+    Serial.print(servo3com);
+    Serial.print(" | ");
+    Serial.print(servo4com);
+    Serial.println(" |");
 }

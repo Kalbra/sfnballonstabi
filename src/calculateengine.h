@@ -13,6 +13,7 @@ class calculate{
 public:
     void run(int*, int*, int*, int*, pidvar, pidvar, pidvar);
     void offset(int, int, int, int);
+    void debug();
 
 private:
     int servo1offset1 = 0;
