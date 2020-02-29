@@ -10,7 +10,8 @@
 
 #define MPU6050_ADRESS     0x68    //Adress for MPPU6050
 
-int compassdirection;     
+int compassdirection;  
+int compassdirectionbefor;     
 
 double Setpointx = 0;               //Point for PID
 double Inputx    = 0;               //Value from MPU6050 for PID
@@ -20,11 +21,16 @@ double Setpointy = 0;               //Point for PID
 double Inputy    = 0;               //Value from MPU6050 for PID
 double Outputy   = 0;               //Output for Servo from PID
 
+double Setpointcompass = 0;               //Point for PID
+double Inputcompass    = 0;               //Value from MPU6050 for PID
+double Outputcompass   = 0;               //Output for Servo from PID
+
 double Outputreadyforservox;        //Value mapped after PID calculation
 double Outputreadyforservoy;        //Value mapped after PID calculation
 
 double Kpx=100, Kix=100, Kdx=0;    //PID Values 
 double Kpy=100, Kiy=100, Kdy=0;    //PID Values 
+double Kpcompass=100, Kicompass=100, Kdcompass=0;
 
 int s1;
 int s2;
@@ -34,10 +40,13 @@ int s4;
 pidvar xpidvar;
 pidvar ypidvar;
 
+pidvar compasspidvar;
+
 calculate calcer;
 
 PID PIDx(&Inputx, &Outputx, &Setpointx, Kpx, Kix, Kdx, DIRECT); //Define PID
 PID PIDy(&Inputy, &Outputy, &Setpointy, Kpy, Kiy, Kdy, DIRECT);
+PID PIDcompass(&Inputcompass, &Outputcompass, &Setpointcompass, Kpcompass, Kicompass, Kdcompass, DIRECT);
 
 MPU6050 mpu6050(Wire);             //Define MPU6050
 
@@ -84,6 +93,18 @@ void loop() {
   Inputx = mpu6050.getAccAngleX(); 
   Inputy  = mpu6050.getAccAngleY();
 
+  Inputcompass = compass.readHeading()-180;
+
+  if(Inputcompass > 0){
+      compasspidvar.direction = true;
+      Inputcompass = -(Inputcompass);
+  }
+  else
+  {
+      compasspidvar.direction = false;
+  }
+
+
   if(Inputx > 0){
       xpidvar.direction = true;
       Inputx = -(Inputx);
@@ -96,7 +117,7 @@ void loop() {
   if(Inputy > 0){
     ypidvar.direction = true;
     Inputy = -(Inputy);
-  }
+  } 
   else
   {
     ypidvar.direction = false;
@@ -108,7 +129,7 @@ void loop() {
   xpidvar.value = Outputx;
   ypidvar.value = Outputy;
 
-  calcer.run(&s1, &s2, &s3, &s4, xpidvar, ypidvar); 
+  calcer.run(&s1, &s2, &s3, &s4, xpidvar, ypidvar, compasspidvar); 
 
 
   compassdirection = compass.readHeading();
@@ -122,7 +143,7 @@ void loop() {
   tester.write(Outputreadyforservox + 90);  //write var to servo
 
        
-  /*
+  
   //Print the infos to serial
   Serial.print("Inputx: ");
   Serial.print(Inputx);
@@ -141,7 +162,7 @@ void loop() {
   
   Serial.print("Compass: ");
   Serial.println(compassdirection);
-  Serial.println("========================================");*/
+  Serial.println("========================================");
 
 
   Serial.println(s1);

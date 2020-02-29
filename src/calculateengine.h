@@ -11,14 +11,24 @@ public:
 
 class calculate{
 public:
-    void run(int* servo1, int* servo2, int* servo3, int* servo4, pidvar  xpid, pidvar ypid);
-    void offset(int fromservo1, int fromservo2, int fromservo3, int fromservo4);
+    void run(int*, int*, int*, int*, pidvar, pidvar, pidvar);
+    void offset(int, int, int, int);
 
 private:
     int servo1offset1 = 0;
     int servo1offset2 = 0;
     int servo1offset3 = 0;
     int servo1offset4 = 0;
+
+    int servo1mpu;
+    int servo2mpu;
+    int servo3mpu;
+    int servo4mpu;
+
+    int servo1com;
+    int servo2com;
+    int servo3com;
+    int servo4com;
 };
 
 #endif // CALCULATE_H
